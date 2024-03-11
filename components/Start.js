@@ -6,7 +6,8 @@ import {
   TextInput,
   TouchableOpacity,
   ImageBackground,
-  Image,
+  KeyboardAvoidingView,
+  Platform,
 } from "react-native";
 import Svg, { Path } from "react-native-svg";
 
@@ -15,9 +16,11 @@ const Start = ({ navigation }) => {
   const [name, setName] = useState("");
   // sets the state for the background color chosen for the chat screen
   const [backgroundColor, setBackgroundColor] = useState("");
+  const [selectedColor, setSelectedColor] = useState("");
 
   const colorHandler = (color) => {
     setBackgroundColor(color);
+    setSelectedColor(color);
   };
 
   return (
@@ -45,20 +48,64 @@ const Start = ({ navigation }) => {
           <Text style={styles.chooseBackground}>Choose Background Color:</Text>
           <View style={styles.colorContainer}>
             <TouchableOpacity
-              style={styles.blackColor}
+              style={[
+                styles.blackColor,
+                selectedColor === "#090C08" && {
+                  borderWidth: 2,
+                  borderColor: "white", // White border
+                  shadowColor: "black", // Black shadow
+                  shadowOffset: { width: 0, height: 2 },
+                  shadowOpacity: 1.0,
+                  shadowRadius: 8,
+                  borderRadius: 25,
+                },
+              ]}
               onPress={() => colorHandler("#090C08")}
             ></TouchableOpacity>
             <TouchableOpacity
-              style={styles.grayColor}
-              onPress={() => colorHandler("#474056")}
+              style={[
+                styles.grayColor,
+                selectedColor === "#00094B" && {
+                  borderWidth: 2,
+                  borderColor: "white", // White border
+                  shadowColor: "black", // Black shadow
+                  shadowOffset: { width: 0, height: 2 },
+                  shadowOpacity: 1.0,
+                  shadowRadius: 8,
+                  borderRadius: 25,
+                },
+              ]}
+              onPress={() => colorHandler("#00094B")}
             ></TouchableOpacity>
             <TouchableOpacity
-              style={styles.blueColor}
-              onPress={() => colorHandler("#8A95A5")}
+              style={[
+                styles.blueColor,
+                selectedColor === "#00157F" && {
+                  borderWidth: 2,
+                  borderColor: "white", // White border
+                  shadowColor: "black", // Black shadow
+                  shadowOffset: { width: 0, height: 2 },
+                  shadowOpacity: 1.0,
+                  shadowRadius: 8,
+                  borderRadius: 25,
+                },
+              ]}
+              onPress={() => colorHandler("#00157F")}
             ></TouchableOpacity>
             <TouchableOpacity
-              style={styles.greenColor}
-              onPress={() => colorHandler("#B9C6AE")}
+              style={[
+                styles.greenColor,
+                selectedColor === "#003297" && {
+                  borderWidth: 2,
+                  borderColor: "white", // White border
+                  shadowColor: "black", // Black shadow
+                  shadowOffset: { width: 0, height: 2 },
+                  shadowOpacity: 1.0,
+                  shadowRadius: 8,
+                  borderRadius: 25,
+                },
+              ]}
+              onPress={() => colorHandler("#003297")}
             ></TouchableOpacity>
           </View>
           {/* Button to navigate to the chat screen */}
@@ -75,6 +122,9 @@ const Start = ({ navigation }) => {
           </TouchableOpacity>
         </View>
       </ImageBackground>
+      {Platform.OS === "ios" ? (
+        <KeyboardAvoidingView behavior="padding" />
+      ) : null}
     </View>
   );
 };
@@ -101,13 +151,14 @@ const styles = StyleSheet.create({
     padding: 15,
     borderWidth: 1,
     marginTop: 20,
-    marginBottom: 50,
+    borderRadius: 4,
   },
   chooseBackground: {
     fontSize: 16,
     fontWeight: "300",
     color: "#757083",
     opacity: 1,
+    marginTop: 50,
   },
   chattingButton: {
     backgroundColor: "#757083",
@@ -116,6 +167,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     marginTop: 65,
     alignItems: "center",
+    borderRadius: 4,
   },
   chattingText: {
     fontSize: 16,
@@ -128,6 +180,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#FFFFFF",
     alignItems: "center",
     marginTop: 250,
+    borderRadius: 4,
   },
   inputText: {
     paddingLeft: 10,
@@ -146,21 +199,21 @@ const styles = StyleSheet.create({
     marginRight: 40,
   },
   grayColor: {
-    backgroundColor: "#474056",
+    backgroundColor: "#00094B",
     width: 50,
     height: 50,
     borderRadius: 25,
     marginRight: 40,
   },
   blueColor: {
-    backgroundColor: "#8A95A5",
+    backgroundColor: "#00157F",
     width: 50,
     height: 50,
     borderRadius: 25,
     marginRight: 40,
   },
   greenColor: {
-    backgroundColor: "#B9C6AE",
+    backgroundColor: "#003297",
     width: 50,
     height: 50,
     borderRadius: 25,
