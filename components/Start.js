@@ -53,6 +53,7 @@ const Start = ({ navigation }) => {
                 selectedColor === "#090C08" && {
                   borderWidth: 2,
                   borderColor: "white", // White border
+                  elevation: 5,
                   shadowColor: "black", // Black shadow
                   shadowOffset: { width: 0, height: 2 },
                   shadowOpacity: 1.0,
@@ -68,6 +69,7 @@ const Start = ({ navigation }) => {
                 selectedColor === "#00094B" && {
                   borderWidth: 2,
                   borderColor: "white", // White border
+                  elevation: 5,
                   shadowColor: "black", // Black shadow
                   shadowOffset: { width: 0, height: 2 },
                   shadowOpacity: 1.0,
@@ -83,6 +85,7 @@ const Start = ({ navigation }) => {
                 selectedColor === "#00157F" && {
                   borderWidth: 2,
                   borderColor: "white", // White border
+                  elevation: 5,
                   shadowColor: "black", // Black shadow
                   shadowOffset: { width: 0, height: 2 },
                   shadowOpacity: 1.0,
@@ -98,6 +101,7 @@ const Start = ({ navigation }) => {
                 selectedColor === "#003297" && {
                   borderWidth: 2,
                   borderColor: "white", // White border
+                  elevation: 5,
                   shadowColor: "black", // Black shadow
                   shadowOffset: { width: 0, height: 2 },
                   shadowOpacity: 1.0,
@@ -165,9 +169,9 @@ const styles = StyleSheet.create({
     width: "88%",
     padding: 15,
     borderWidth: 1,
-    marginTop: 65,
     alignItems: "center",
     borderRadius: 4,
+    marginBottom: 20,
   },
   chattingText: {
     fontSize: 16,
@@ -176,7 +180,6 @@ const styles = StyleSheet.create({
   },
   whiteBox: {
     width: "88%",
-    height: "44%",
     backgroundColor: "#FFFFFF",
     alignItems: "center",
     marginTop: 250,
