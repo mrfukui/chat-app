@@ -7,39 +7,45 @@ import {
   Platform,
 } from "react-native";
 import { Bubble, GiftedChat } from "react-native-gifted-chat";
+import {
+  collection,
+  getDocs,
+  addDoc,
+  onSnapshot,
+  query,
+  where,
+  orderBy,
+} from "firebase/firestore";
 
-const Chat = ({ route, navigation }) => {
+const Chat = ({ route, navigation, db }) => {
   // Extracts the props set in the Start screen
-  const { name, backgroundColor } = route.params;
+  const { name, backgroundColor, id } = route.params;
   const [messages, setMessages] = useState([]);
 
   // Adds new messages to chat
   const onSend = (newMessages) => {
-    setMessages((previousMessages) =>
-      GiftedChat.append(previousMessages, newMessages)
-    );
+    addDoc(collection(db, "messages"), newMessages[0]);
   };
 
-  // Creates a first message from another user and a system message
+  // Adds new message to message database
   useEffect(() => {
-    setMessages([
-      {
-        _id: 1,
-        text: "Hola :)",
-        createdAt: new Date(),
-        user: {
-          _id: 2,
-          name: "React Native",
-          avatar: "https://placeimg.com/140/140/any",
-        },
-      },
-      {
-        _id: 2,
-        text: "You have entered the chat",
-        createdAt: new Date(),
-        system: true,
-      },
-    ]);
+    const q = query(collection(db, "messages"), orderBy("createdAt", "desc"));
+    const unsubMessages = onSnapshot(q, (documentsSnapshot) => {
+      let newMessages = [];
+      documentsSnapshot.forEach((doc) => {
+        newMessages.push({
+          id: doc.id,
+          ...doc.data(),
+          createdAt: new Date(doc.data().createdAt.toMillis()),
+        });
+      });
+      setMessages(newMessages);
+    });
+
+    // Clean up code
+    return () => {
+      if (unsubMessages) unsubMessages();
+    };
   }, []);
 
   // Set the navigation header to the name prop and the empty dependency array makes sure the effect runs only once
@@ -71,7 +77,8 @@ const Chat = ({ route, navigation }) => {
         renderBubble={renderBubble}
         onSend={(messages) => onSend(messages)}
         user={{
-          _id: 1,
+          _id: id,
+          name: name,
         }}
       />
       {Platform.OS === "android" ? (

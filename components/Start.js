@@ -8,8 +8,10 @@ import {
   ImageBackground,
   KeyboardAvoidingView,
   Platform,
+  Alert,
 } from "react-native";
 import Svg, { Path } from "react-native-svg";
+import { getAuth, signInAnonymously } from "firebase/auth";
 
 const Start = ({ navigation }) => {
   // sets the state for the name inputted
@@ -21,6 +23,24 @@ const Start = ({ navigation }) => {
   const colorHandler = (color) => {
     setBackgroundColor(color);
     setSelectedColor(color);
+  };
+
+  const auth = getAuth();
+
+  // Anonymous signin with 3 route parameters
+  const signInUser = () => {
+    signInAnonymously(auth)
+      .then((result) => {
+        navigation.navigate("Chat", {
+          id: result.user.uid,
+          name: name,
+          backgroundColor: backgroundColor,
+        });
+        Alert.alert("Signed in Successfully!");
+      })
+      .catch((error) => {
+        Alert.alert("Unable to sign in, try later again.");
+      });
   };
 
   return (
@@ -113,15 +133,7 @@ const Start = ({ navigation }) => {
             ></TouchableOpacity>
           </View>
           {/* Button to navigate to the chat screen */}
-          <TouchableOpacity
-            style={styles.chattingButton}
-            onPress={() =>
-              navigation.navigate("Chat", {
-                name: name,
-                backgroundColor: backgroundColor,
-              })
-            }
-          >
+          <TouchableOpacity style={styles.chattingButton} onPress={signInUser}>
             <Text style={styles.chattingText}>Start Chatting</Text>
           </TouchableOpacity>
         </View>
