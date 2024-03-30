@@ -31,7 +31,7 @@ This is a chat app built for mobile devices using React Native. Users will be ab
 
 ### 5. Database configuration
 
-- If you do not already, create a google account. Navigate to the Firebase website and click on "Get Started" to create a new project.
+- If you do not already have one, create a google account. Navigate to the Firebase website and click on "Get Started" to create a new project.
 - Create the project with the default settings and a name of your choosing.
 - Go to the dashboard and on the left side of the screen click "Build" and then "Firestore Database."
 - Create a database and choose "Start in production mode." Continue with the default settings.
