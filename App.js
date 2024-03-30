@@ -13,6 +13,7 @@ import {
   enableNetwork,
 } from "firebase/firestore";
 import { useNetInfo } from "@react-native-community/netinfo";
+import { getStorage } from "firebase/storage";
 
 // Create stack navigator
 const Stack = createNativeStackNavigator();
@@ -33,6 +34,8 @@ const App = () => {
 
   // Initialize Cloud Firestore and get a reference to the service
   const db = getFirestore(app);
+  // Initialize storage handler for images
+  const storage = getStorage(app);
 
   const connectionStatus = useNetInfo();
 
@@ -57,6 +60,7 @@ const App = () => {
             <Chat
               isConnected={connectionStatus.isConnected}
               db={db}
+              storage={storage}
               {...props}
             />
           )}

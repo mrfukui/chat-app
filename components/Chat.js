@@ -5,6 +5,7 @@ import {
   Text,
   KeyboardAvoidingView,
   Platform,
+  TouchableOpacity,
 } from "react-native";
 import { Bubble, GiftedChat, InputToolbar } from "react-native-gifted-chat";
 import {
@@ -12,15 +13,18 @@ import {
   addDoc,
   onSnapshot,
   query,
-  where,
   orderBy,
 } from "firebase/firestore";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import CustomActions from "./CustomActions";
+import MapView from "react-native-maps";
+import { Audio } from "expo-av";
 
-const Chat = ({ route, navigation, db, isConnected }) => {
+const Chat = ({ route, navigation, db, isConnected, storage }) => {
   // Extracts the props set in the Start screen
   const { name, backgroundColor, id } = route.params;
   const [messages, setMessages] = useState([]);
+  let soundObject = null;
 
   // Adds new messages to chat
   const onSend = (newMessages) => {
@@ -52,9 +56,11 @@ const Chat = ({ route, navigation, db, isConnected }) => {
     // Clean up code
     return () => {
       if (unsubMessages) unsubMessages();
+      if (soundObject) soundObject.unloadAsync();
     };
   }, [isConnected]);
 
+  // Caches messages if online
   const cacheMessages = async (messagesToCache) => {
     try {
       await AsyncStorage.setItem(
@@ -66,6 +72,7 @@ const Chat = ({ route, navigation, db, isConnected }) => {
     }
   };
 
+  // Loads cached messages if offline
   const loadCachedMessages = async () => {
     const cachedMessages = (await AsyncStorage.getItem("chat_messages")) || [];
     setMessages(JSON.parse(cachedMessages));
@@ -99,12 +106,66 @@ const Chat = ({ route, navigation, db, isConnected }) => {
     );
   };
 
+  // Passing props from Gifted Chat such as onSend
+  const renderCustomActions = (props) => {
+    return <CustomActions storage={storage} {...props} />;
+  };
+
+  // Creates bubble for mapview
+  const renderCustomView = (props) => {
+    const { currentMessage } = props;
+    if (currentMessage.location) {
+      return (
+        <MapView
+          style={{ width: 150, height: 100, borderRadius: 13, margin: 3 }}
+          region={{
+            latitude: currentMessage.location.latitude,
+            longitude: currentMessage.location.longitude,
+            latitudeDelta: 0.0922,
+            longitudeDelta: 0.0421,
+          }}
+        />
+      );
+    }
+    return null;
+  };
+
+  // Retrieves audio from storage and creates audio bubble
+  const renderAudioBubble = (props) => {
+    return (
+      <View {...props}>
+        <TouchableOpacity
+          style={{ backgroundColor: "#FF0", borderRadius: 10, margin: 5 }}
+          onPress={async () => {
+            try {
+              if (soundObject) soundObject.unloadAsync();
+              const { sound } = await Audio.Sound.createAsync({
+                uri: props.currentMessage.audio,
+              });
+              soundObject = sound;
+              await sound.playAsync();
+            } catch (error) {
+              console.error("Error playing audio:", error);
+            }
+          }}
+        >
+          <Text style={{ textAlign: "center", color: "black", padding: 5 }}>
+            Play Audio
+          </Text>
+        </TouchableOpacity>
+      </View>
+    );
+  };
+
   return (
     <View style={[styles.container, { backgroundColor: backgroundColor }]}>
       <GiftedChat
         messages={messages}
         renderBubble={renderBubble}
         renderInputToolbar={renderInputToolbar}
+        renderActions={renderCustomActions}
+        renderCustomView={renderCustomView}
+        renderMessageAudio={renderAudioBubble}
         onSend={(messages) => onSend(messages)}
         user={{
           _id: id,
