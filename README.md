@@ -4,6 +4,10 @@
 
 This is a chat app built for mobile devices using React Native. Users will be able to use a chat interface, share images, share location, and share audio.
 
+## Screenshots of Application:
+
+![Screenshots](<img/Screenshot%20(225).png><img/Screenshot%20(228).png>)
+
 ## Features:
 
 - Users can enter a username and choose a background color for their chat screen
