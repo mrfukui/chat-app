@@ -6,7 +6,7 @@ This is a chat app built for mobile devices using React Native. Users will be ab
 
 ## Screenshots of Application:
 
-![Screenshots](<img/Screenshot%20(225).png><img/Screenshot%20(228).png>)
+![Screenshots](<img/Screenshot%20(225).png>) ![Screenshots](<img/Screenshot%20(228).png>)
 
 ## Features:
 
